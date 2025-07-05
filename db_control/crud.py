@@ -3,7 +3,7 @@ import platform
 print("platform", platform.uname())
 
 from fastapi import FastAPI, HTTPException, Query
-from sqlalchemy import create_engine, insert, delete, update, select
+from sqlalchemy import create_engine, insert, delete, update, select ,BigInteger, Column
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 import json

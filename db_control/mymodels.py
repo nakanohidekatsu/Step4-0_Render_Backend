@@ -1,4 +1,4 @@
-from sqlalchemy import String, Integer
+from sqlalchemy import String, Integer ,BigInteger, Column
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 # from datetime import datetime
 
@@ -28,7 +28,8 @@ class TORIMEI(Base):
 
 class TORIHIKI(Base):
     __tablename__ = 'TORIHIKI'
-    TRD_ID: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    TRD_ID = Column(BigInteger, primary_key=True, autoincrement=True)
+#    TRD_ID: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True, nullable=False)
     DATETIME: Mapped[str] = mapped_column(String)
     EMP_CD: Mapped[str] = mapped_column(String(10))
     STORE_CD: Mapped[str] = mapped_column(String(5))
