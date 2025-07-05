@@ -10,6 +10,8 @@ from db_control import crud, mymodels
 from db_control.create_tables import init_db
 from dotenv import load_dotenv
 from typing import Optional
+from sqlalchemy import create_engine, insert, delete, update, select ,BigInteger, Column
+
 
 # from openai import OpenAI
 
@@ -24,7 +26,9 @@ class SHOUHIN(BaseModel):
     PRICE_INC_TAX: int
 
 class TORIHIKI(BaseModel):
-    TRD_ID: Optional[int] = None
+    
+    TRD_ID = Column(BigInteger, primary_key=True, autoincrement=True)
+#    TRD_ID: Optional[int] = None
     DATETIME: str
     EMP_CD: str
     STORE_CD: str
