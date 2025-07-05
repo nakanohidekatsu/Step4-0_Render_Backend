@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Query
+from fastapi import Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import requests
@@ -26,9 +27,7 @@ class SHOUHIN(BaseModel):
     PRICE_INC_TAX: int
 
 class TORIHIKI(BaseModel):
-    
-    TRD_ID = Column(BigInteger, primary_key=True, autoincrement=True)
-#    TRD_ID: Optional[int] = None
+    TRD_ID: Optional[int] = None
     DATETIME: str
     EMP_CD: str
     STORE_CD: str
@@ -36,6 +35,9 @@ class TORIHIKI(BaseModel):
     TOTAL_AMT: int
     TTL_AMT_EX_TAX: int
     TTL_AMT_INC_TAX: int
+
+class Base(DeclarativeBase):
+    pass
 
 class TORIMEI(BaseModel):
     TRD_ID: int
@@ -88,13 +90,25 @@ def read_shouhin(CODE: int = Query(...)):
 
 
 @app.post("/torihiki")
-def create_TORIHIKI(TORIHIKI: TORIHIKI):
-    print("nakano TORIHIKI",TORIHIKI)
-    values = TORIHIKI.dict()
+def create_torihiki(
+    data: TORIHIKI,
+#    session: Session = Depends(get_session)  # 必要に応じてセッションを依存注入
+):
+    # TRD_ID は自動採番なので除外
+    payload = data.dict(exclude_none=True, exclude={"TRD_ID"})
+    # CRUD 実行（引数は適宜調整）
+    crud.myinsert_torihiki(TORIHIKI_ORM, payload)
+    new_id = crud.myselect_TRD_ID(TORIHIKI_ORM)
+    return {"TRD_ID": new_id}
+
+
+# def create_TORIHIKI(TORIHIKI: TORIHIKI):
+#     print("nakano TORIHIKI",TORIHIKI)
+#     values = TORIHIKI.dict()
     
-    tmp = crud.myinsert_torihiki(mymodels.TORIHIKI, values)
-    result = crud.myselect_TRD_ID(mymodels.TORIHIKI)
-    return result
+#     tmp = crud.myinsert_torihiki(mymodels.TORIHIKI, values)
+#     result = crud.myselect_TRD_ID(mymodels.TORIHIKI)
+#     return result
 
 @app.post("/torimei")
 def create_TORIMEI(TORIMEI: TORIMEI):
