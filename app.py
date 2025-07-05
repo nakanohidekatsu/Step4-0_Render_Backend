@@ -97,8 +97,8 @@ def create_torihiki(
     # TRD_ID は自動採番なので除外
     payload = data.dict(exclude_none=True, exclude={"TRD_ID"})
     # CRUD 実行（引数は適宜調整）
-    crud.myinsert_torihiki(TORIHIKI_ORM, payload)
-    new_id = crud.myselect_TRD_ID(TORIHIKI_ORM)
+    crud.myinsert_torihiki(TORIHIKI, payload)
+    new_id = crud.myselect_TRD_ID(TORIHIKI)
     return {"TRD_ID": new_id}
 
 
