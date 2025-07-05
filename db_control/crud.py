@@ -72,7 +72,8 @@ def myselect(mymodel, CODE):
     # session構築
     Session = sessionmaker(bind=engine)
     session = Session()
-    query = session.query(mymodel).filter(mymodel.CODE == CODE)
+    code_str = str(CODE)
+    query = session.query(mymodel).filter(mymodel.CODE == code_str)
     try:
         # トランザクションを開始
         with session.begin():
