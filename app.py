@@ -36,8 +36,8 @@ class TORIHIKI(BaseModel):
     TTL_AMT_EX_TAX: int
     TTL_AMT_INC_TAX: int
 
-class Base(DeclarativeBase):
-    pass
+# class Base(DeclarativeBase):
+#     pass
 
 class TORIMEI(BaseModel):
     TRD_ID: int
