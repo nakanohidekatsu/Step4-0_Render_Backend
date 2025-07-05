@@ -17,9 +17,8 @@ class SHOUHIN(Base):
 class TORIMEI(Base):
     __tablename__ = 'TORIMEI'
     TRD_ID: Mapped[int] = mapped_column(Integer, primary_key=True)
-    PRD_ID: Mapped[int] = mapped_column(Integer, primary_key=True)
     DTL_ID: Mapped[int] = mapped_column(Integer)
-    PRD_ID: Mapped[int] = mapped_column(Integer)
+    PRD_ID: Mapped[int] = mapped_column(Integer, primary_key=True)
     PRD_CODE: Mapped[str] = mapped_column(String(13))
     PRD_NAME: Mapped[str] = mapped_column(String(50))
     PRD_PRICE: Mapped[int] = mapped_column(Integer)
@@ -38,15 +37,15 @@ class TORIHIKI(Base):
     TTL_AMT_EX_TAX: Mapped[int] = mapped_column(Integer)
     TTL_AMT_INC_TAX: Mapped[int] = mapped_column(Integer)
     
-class TORIHIKI_ORM(Base):
-    __tablename__ = "TORIHIKI"
-    TRD_ID: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
-    DATETIME: Mapped[str] = mapped_column(String, nullable=False)
-    EMP_CD: Mapped[str] = mapped_column(String, nullable=False)
-    STORE_CD: Mapped[str] = mapped_column(String, nullable=False)
-    POS_NO: Mapped[str] = mapped_column(String, nullable=False)
-    TOTAL_AMT: Mapped[int] = mapped_column(Integer, nullable=False)
-    TTL_AMT_EX_TAX: Mapped[int] = mapped_column(Integer, nullable=False)
-    TTL_AMT_INC_TAX: Mapped[int] = mapped_column(Integer, nullable=False)
+# class TORIHIKI_ORM(Base):
+#     __tablename__ = "TORIHIKI"
+#     TRD_ID: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+#     DATETIME: Mapped[str] = mapped_column(String, nullable=False)
+#     EMP_CD: Mapped[str] = mapped_column(String, nullable=False)
+#     STORE_CD: Mapped[str] = mapped_column(String, nullable=False)
+#     POS_NO: Mapped[str] = mapped_column(String, nullable=False)
+#     TOTAL_AMT: Mapped[int] = mapped_column(Integer, nullable=False)
+#     TTL_AMT_EX_TAX: Mapped[int] = mapped_column(Integer, nullable=False)
+#     TTL_AMT_INC_TAX: Mapped[int] = mapped_column(Integer, nullable=False)
 
 
