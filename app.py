@@ -46,9 +46,9 @@ class TORIHIKI(BaseModel):
 class TORIMEI(BaseModel):
     model_config = ConfigDict(
         alias_generator=str.upper,
-        populate_by_field_name=True
+        populate_by_name=True
     )
-    trd_id: int
+    trd_id: Optional[int] = None
     prd_id: int
     prd_code: str
     prd_name: str
