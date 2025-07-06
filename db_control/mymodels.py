@@ -1,4 +1,4 @@
-from sqlalchemy import String, Integer ,BigInteger, Column
+from sqlalchemy import String, Integer ,BigInteger, Column , ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 # from datetime import datetime
 
@@ -16,14 +16,33 @@ class SHOUHIN(Base):
 
 class TORIMEI(Base):
     __tablename__ = 'TORIMEI'
-    TRD_ID: Mapped[int] = mapped_column(Integer, primary_key=True)
-    DTL_ID: Mapped[int] = mapped_column(Integer)
-    PRD_ID: Mapped[int] = mapped_column(Integer, primary_key=True)
-    PRD_CODE: Mapped[str] = mapped_column(String(13))
-    PRD_NAME: Mapped[str] = mapped_column(String(50))
-    PRD_PRICE: Mapped[int] = mapped_column(Integer)
-    PRD_PRICE_INC_TAX: Mapped[int] = mapped_column(Integer)
-    TAX_CD: Mapped[str] = mapped_column(String(2))
+    trd_id: Mapped[int] = mapped_column(
+        BigInteger, 
+        ForeignKey('TORIHIKI.TRD_ID'), 
+        primary_key=True
+    )
+    dtl_id: Mapped[int] = mapped_column(
+        Integer, 
+        primary_key=True, 
+        autoincrement=True
+    )
+    prd_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    prd_code: Mapped[str] = mapped_column(String(13))
+    prd_name: Mapped[str] = mapped_column(String(50))
+    prd_price: Mapped[int] = mapped_column(Integer)
+    prd_price_inc_tax: Mapped[int] = mapped_column(Integer)
+    tax_cd: Mapped[str] = mapped_column(String(2))
+
+# class TORIMEI(Base):
+#     __tablename__ = 'TORIMEI'
+#     TRD_ID: Mapped[int] = mapped_column(Integer, primary_key=True)
+#     DTL_ID: Mapped[int] = mapped_column(Integer)
+#     PRD_ID: Mapped[int] = mapped_column(Integer, primary_key=True)
+#     PRD_CODE: Mapped[str] = mapped_column(String(13))
+#     PRD_NAME: Mapped[str] = mapped_column(String(50))
+#     PRD_PRICE: Mapped[int] = mapped_column(Integer)
+#     PRD_PRICE_INC_TAX: Mapped[int] = mapped_column(Integer)
+#     TAX_CD: Mapped[str] = mapped_column(String(2))
 
 class TORIHIKI(Base):
     __tablename__ = 'TORIHIKI'

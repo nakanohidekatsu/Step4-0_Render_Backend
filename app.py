@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI, HTTPException, Query, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 import json
 import os
 
@@ -33,15 +33,26 @@ class TORIHIKI(BaseModel):
     TTL_AMT_INC_TAX: int
 
 class TORIMEI(BaseModel):
-    TRD_ID: int
-    DTL_ID: int
-    PRD_ID: int
-    PRD_CODE: str
-    PRD_NAME: str
-    PRD_PRICE: int
-    PRD_PRICE_INC_TAX: int
-    TAX_CD: str
-
+    # TRD_ID: int
+    # DTL_ID: int
+    # PRD_ID: int
+    # PRD_CODE: str
+    # PRD_NAME: str
+    # PRD_PRICE: int
+    # PRD_PRICE_INC_TAX: int
+    # TAX_CD: str
+    
+    trd_id:      int
+    dtl_id:      int
+    prd_id:      int
+    prd_code:    str
+    prd_name:    str
+    prd_price:   int
+    prd_price_inc_tax: int
+    tax_cd:      str
+    
+    model_config = ConfigDict(populate_by_name=True)
+    
 app = FastAPI()
 
 # CORSミドルウェアの設定
@@ -84,8 +95,13 @@ def create_torihiki(data: TORIHIKI):
 
 
 @app.post("/torimei")
+# def create_torimei(data: TORIMEI):
+#     values = data.dict()
+#     # ORM モデルを正しく渡す
+#     result = crud.myinsert_torimei(mymodels.TORIMEI, values)
+#     return {"status": result}
+
 def create_torimei(data: TORIMEI):
-    values = data.dict()
-    # ORM モデルを正しく渡す
-    result = crud.myinsert_torimei(mymodels.TORIMEI, values)
-    return {"status": result}
+    payload = data.model_dump()        # → {'trd_id':…, 'dtl_id':…, …}
+    crud.myinsert_torimei(mymodels.TORIMEI, payload)
+    return {"status": "inserted"}
