@@ -1,24 +1,20 @@
-from fastapi import FastAPI, HTTPException, Query
-from fastapi import Depends, HTTPException, status
+# app.py
+
+from fastapi import FastAPI, HTTPException, Query, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import requests
-import pandas as pd
 import json
-from graphene import ObjectType, String, Int, List, Schema, Mutation, Field
 import os
+
 from db_control import crud, mymodels
 from db_control.create_tables import init_db
 from dotenv import load_dotenv
 from typing import Optional
-from sqlalchemy import create_engine, insert, delete, update, select ,BigInteger, Column
 
-
-# from openai import OpenAI
-
-# # アプリケーション初期化時にテーブルを作成
+# アプリケーション初期化時にテーブルを作成
 init_db()
 
+# === Pydantic モデル ===
 class SHOUHIN(BaseModel):
     PRD_ID: int
     CODE: int
@@ -35,9 +31,6 @@ class TORIHIKI(BaseModel):
     TOTAL_AMT: int
     TTL_AMT_EX_TAX: int
     TTL_AMT_INC_TAX: int
-
-# class Base(DeclarativeBase):
-#     pass
 
 class TORIMEI(BaseModel):
     TRD_ID: int
@@ -60,60 +53,39 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-####  nakano add Start  ####
 # .envファイルを読み込む
 load_dotenv()
 print("DATABASE_URL:", os.getenv("DATABASE_URL"))
 
-###　●●●　Local用　　●●●
-# 環境変数からAPIキーを取得
-# OpenAI.api_key = os.getenv("OPENAI_API_KEY")
-# kokudo_api_key = os.getenv("kokudo_API_KEY")
-
-###　●●●　Host用　　●●●
-# シークレットからAPIキーを取得
-# OpenAI.api_key  = st.secrets["OPENAI_API_KEY"]
-
-####  nakano add End  ####
 
 @app.get("/")
 def index():
     return {"message": "FastAPI top page!"}
 
+
 @app.get("/shouhin")
 def read_shouhin(CODE: int = Query(...)):
     result = crud.myselect(mymodels.SHOUHIN, CODE)
     if not result:
-        raise HTTPException(status_code=404, detail="")
-    result_obj = json.loads(result)
-    return result_obj[0] if result_obj else None
+        raise HTTPException(status_code=404, detail="商品が見つかりません")
+    items = json.loads(result)
+    return items[0] if items else None
 
 
 @app.post("/torihiki")
-def create_torihiki(
-    data: TORIHIKI,
-#    session: Session = Depends(get_session)  # 必要に応じてセッションを依存注入
-):
-    # TRD_ID は自動採番なので除外
+def create_torihiki(data: TORIHIKI):
+    # Pydantic モデル → dict
     payload = data.dict(exclude_none=True, exclude={"TRD_ID"})
-    # CRUD 実行（引数は適宜調整）
-    crud.myinsert_torihiki(TORIHIKI, payload)
-    new_id = crud.myselect_TRD_ID(TORIHIKI)
+    # ORM モデルを正しく渡す
+    crud.myinsert_torihiki(mymodels.TORIHIKI, payload)
+    # 最大 TRD_ID を取得
+    new_id = crud.myselect_TRD_ID(mymodels.TORIHIKI)
     return {"TRD_ID": new_id}
 
 
-# def create_TORIHIKI(TORIHIKI: TORIHIKI):
-#     print("nakano TORIHIKI",TORIHIKI)
-#     values = TORIHIKI.dict()
-    
-#     tmp = crud.myinsert_torihiki(mymodels.TORIHIKI, values)
-#     result = crud.myselect_TRD_ID(mymodels.TORIHIKI)
-#     return result
-
 @app.post("/torimei")
-def create_TORIMEI(TORIMEI: TORIMEI):
-    print("nakano TORIMEI",TORIMEI)
-    values = TORIMEI.dict()
-    
+def create_torimei(data: TORIMEI):
+    values = data.dict()
+    # ORM モデルを正しく渡す
     result = crud.myinsert_torimei(mymodels.TORIMEI, values)
-    return result
+    return {"status": result}
