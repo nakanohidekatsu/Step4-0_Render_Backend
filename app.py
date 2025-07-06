@@ -33,28 +33,28 @@ class TORIHIKI(BaseModel):
     TTL_AMT_INC_TAX: int
 
 class TORIMEI(BaseModel):
-    # TRD_ID: int
-    # DTL_ID: int
-    # PRD_ID: int
-    # PRD_CODE: str
-    # PRD_NAME: str
-    # PRD_PRICE: int
-    # PRD_PRICE_INC_TAX: int
-    # TAX_CD: str
+    TRD_ID: int
+    DTL_ID: Optional[int] = None
+    PRD_ID: int
+    PRD_CODE: str
+    PRD_NAME: str
+    PRD_PRICE: int
+    PRD_PRICE_INC_TAX: int
+    TAX_CD: str
     
-    trd_id:      int
-    dtl_id:      int | None = None
-    prd_id:      int
-    prd_code:    str
-    prd_name:    str
-    prd_price:   int
-    prd_price_inc_tax: int
-    tax_cd:      str
+    # trd_id:      int
+    # dtl_id:      int | None = None
+    # prd_id:      int
+    # prd_code:    str
+    # prd_name:    str
+    # prd_price:   int
+    # prd_price_inc_tax: int
+    # tax_cd:      str
     
-    model_config = ConfigDict(
-        alias_generator=lambda field: field.upper(),
-        populate_by_name=True
-    )
+    # model_config = ConfigDict(
+    #     alias_generator=lambda field: field.upper(),
+    #     populate_by_name=True
+    # )
     
     class Config:
         # JSON 側で大文字キーを使うなら次を有効化
@@ -105,11 +105,11 @@ def create_torihiki(data: TORIHIKI):
 
 
 @app.post("/torimei")
-# def create_torimei(data: TORIMEI):
-#     values = data.dict()
-#     # ORM モデルを正しく渡す
-#     result = crud.myinsert_torimei(mymodels.TORIMEI, values)
-#     return {"status": result}
+def create_torimei(data: TORIMEI):
+    values = data.dict(exclude_none=True, exclude={"DTL_ID"})
+    # ORM モデルを正しく渡す
+    result = crud.myinsert_torimei(mymodels.TORIMEI, values)
+    return {"status": result}
 
 # def create_torimei(data: TORIMEI):
 #     payload = data.model_dump()        # → {'trd_id':…, 'dtl_id':…, …}
@@ -117,9 +117,10 @@ def create_torihiki(data: TORIHIKI):
 #     return {"status": "inserted"}
 
 
-def create_torimei(data: TORIMEI):
-    # dtl_id は DB 側で生成させるので除外
-    payload = data.model_dump(by_alias=True, exclude_unset=True, exclude={"dtl_id"})
-    new = crud.insert_torimei_and_return(data_model=mymodels.TORIMEI, values=payload)
-    return {"trd_id": new.trd_id, "dtl_id": new.dtl_id}
-
+# def create_torimei(data: TORIMEI):
+#     # dtl_id は DB 側で生成させるので除外
+#     payload = data.model_dump(by_alias=True, exclude_unset=True, exclude={"dtl_id"})
+#     new = crud.insert_torimei_and_return(data_model=mymodels.TORIMEI, values=payload)
+#     return {"trd_id": new.trd_id, "dtl_id": new.dtl_id}
+# 
+# 
