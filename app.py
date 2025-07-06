@@ -32,24 +32,26 @@ class TORIHIKI(BaseModel):
     TTL_AMT_EX_TAX: int
     TTL_AMT_INC_TAX: int
 
-class TORIMEI(BaseModel):
-    TRD_ID: int
-    DTL_ID: Optional[int] = None
-    PRD_ID: int
-    PRD_CODE: str
-    PRD_NAME: str
-    PRD_PRICE: int
-    PRD_PRICE_INC_TAX: int
-    TAX_CD: str
+# class TORIMEI(BaseModel):
+#     TRD_ID: int
+#     DTL_ID: Optional[int] = None
+#     PRD_ID: int
+#     PRD_CODE: str
+#     PRD_NAME: str
+#     PRD_PRICE: int
+#     PRD_PRICE_INC_TAX: int
+#     TAX_CD: str
     
-    # trd_id:      int
-    # dtl_id:      int | None = None
-    # prd_id:      int
-    # prd_code:    str
-    # prd_name:    str
-    # prd_price:   int
-    # prd_price_inc_tax: int
-    # tax_cd:      str
+class TORIMEI(BaseModel):
+    model_config = ConfigDict(alias_generator=str.upper, populate_by_name=True)
+    # snake_case 属性名に
+    trd_id: int
+    prd_id: int
+    prd_code: str
+    prd_name: str
+    prd_price: int
+    prd_price_inc_tax: int
+    tax_cd: str
     
     # model_config = ConfigDict(
     #     alias_generator=lambda field: field.upper(),
@@ -106,10 +108,15 @@ def create_torihiki(data: TORIHIKI):
 
 @app.post("/torimei")
 def create_torimei(data: TORIMEI):
-    values = data.dict(exclude_none=True, exclude={"DTL_ID"})
-    # ORM モデルを正しく渡す
-    result = crud.myinsert_torimei(mymodels.TORIMEI, values)
-    return {"status": result}
+        # by_alias=True で大文字キーに変換
+    values = data.model_dump(by_alias=True, exclude_unset=True)
+    crud.myinsert_torimei(mymodels.TORIMEI, values)
+    return {"status": "inserted"}
+
+#     values = data.dict(exclude_none=True, exclude={"DTL_ID"})
+#     # ORM モデルを正しく渡す
+#     result = crud.myinsert_torimei(mymodels.TORIMEI, values)
+#     return {"status": result}
 
 # def create_torimei(data: TORIMEI):
 #     payload = data.model_dump()        # → {'trd_id':…, 'dtl_id':…, …}
