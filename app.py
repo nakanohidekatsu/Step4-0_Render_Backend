@@ -55,7 +55,7 @@ class TORIMEI(BaseModel):
     prd_name: str
     prd_price: int
     prd_price_inc_tax: int
-    tax_cd: str
+    tax_cd: Optional[str] = None 
         
 # class TORIMEI(BaseModel):
 #     model_config = ConfigDict(alias_generator=str.upper, populate_by_name=True)
