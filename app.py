@@ -56,7 +56,7 @@ class TORIMEI(BaseModel):
         alias_generator = str.upper
         allow_population_by_field_name = True
         
-    model_config = ConfigDict(populate_by_name=True)
+#     model_config = ConfigDict(populate_by_name=True)
     
 app = FastAPI()
 
