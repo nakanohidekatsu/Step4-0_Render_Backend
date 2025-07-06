@@ -41,10 +41,13 @@ class TORIHIKI(BaseModel):
 #     PRD_PRICE: int
 #     PRD_PRICE_INC_TAX: int
 #     TAX_CD: str
-    
+
+
 class TORIMEI(BaseModel):
-    model_config = ConfigDict(alias_generator=str.upper, populate_by_name=True)
-    # snake_case 属性名に
+    model_config = ConfigDict(
+        alias_generator=str.upper,
+        populate_by_field_name=True
+    )
     trd_id: int
     prd_id: int
     prd_code: str
@@ -52,16 +55,27 @@ class TORIMEI(BaseModel):
     prd_price: int
     prd_price_inc_tax: int
     tax_cd: str
+        
+# class TORIMEI(BaseModel):
+#     model_config = ConfigDict(alias_generator=str.upper, populate_by_name=True)
+#     # snake_case 属性名に
+#     trd_id: int
+#     prd_id: int
+#     prd_code: str
+#     prd_name: str
+#     prd_price: int
+#     prd_price_inc_tax: int
+#     tax_cd: str
     
     # model_config = ConfigDict(
     #     alias_generator=lambda field: field.upper(),
     #     populate_by_name=True
     # )
     
-    class Config:
-        # JSON 側で大文字キーを使うなら次を有効化
-        alias_generator = str.upper
-        allow_population_by_field_name = True
+#     class Config:
+#         # JSON 側で大文字キーを使うなら次を有効化
+#         alias_generator = str.upper
+#         allow_population_by_field_name = True
         
 #     model_config = ConfigDict(populate_by_name=True)
     
