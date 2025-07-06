@@ -1,4 +1,4 @@
-from sqlalchemy import String, Integer ,BigInteger, Column , ForeignKey
+from sqlalchemy import String, Integer ,BigInteger, Column , ForeignKey,Identity
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 # from datetime import datetime
 
@@ -16,15 +16,11 @@ class SHOUHIN(Base):
 
 class TORIMEI(Base):
     __tablename__ = 'TORIMEI'
-    trd_id: Mapped[int] = mapped_column(
-        BigInteger, 
-        ForeignKey('TORIHIKI.TRD_ID'), 
+    trd_id = mapped_column(BigInteger, ForeignKey('TORIHIKI.TRD_ID'), primary_key=True)
+    dtl_id = mapped_column(
+        Integer,
+        Identity(start=1, cycle=False),
         primary_key=True
-    )
-    dtl_id: Mapped[int] = mapped_column(
-        Integer, 
-        primary_key=True, 
-        autoincrement=True
     )
     prd_id: Mapped[int] = mapped_column(Integer, nullable=False)
     prd_code: Mapped[str] = mapped_column(String(13))

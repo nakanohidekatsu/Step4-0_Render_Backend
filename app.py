@@ -43,7 +43,7 @@ class TORIMEI(BaseModel):
     # TAX_CD: str
     
     trd_id:      int
-    dtl_id:      int
+    dtl_id:      Optional[int] = None  # 自動採番列は任意
     prd_id:      int
     prd_code:    str
     prd_name:    str
@@ -51,6 +51,11 @@ class TORIMEI(BaseModel):
     prd_price_inc_tax: int
     tax_cd:      str
     
+    class Config:
+        # JSON 側で大文字キーを使うなら次を有効化
+        alias_generator = str.upper
+        allow_population_by_field_name = True
+        
     model_config = ConfigDict(populate_by_name=True)
     
 app = FastAPI()
@@ -101,7 +106,15 @@ def create_torihiki(data: TORIHIKI):
 #     result = crud.myinsert_torimei(mymodels.TORIMEI, values)
 #     return {"status": result}
 
+# def create_torimei(data: TORIMEI):
+#     payload = data.model_dump()        # → {'trd_id':…, 'dtl_id':…, …}
+#     crud.myinsert_torimei(mymodels.TORIMEI, payload)
+#     return {"status": "inserted"}
+
+
 def create_torimei(data: TORIMEI):
-    payload = data.model_dump()        # → {'trd_id':…, 'dtl_id':…, …}
-    crud.myinsert_torimei(mymodels.TORIMEI, payload)
-    return {"status": "inserted"}
+    # dtl_id は DB 側で生成させるので除外
+    payload = data.model_dump(by_alias=True, exclude_unset=True, exclude={"dtl_id"})
+    new = crud.insert_torimei_and_return(data_model=mymodels.TORIMEI, values=payload)
+    return {"trd_id": new.trd_id, "dtl_id": new.dtl_id}
+
