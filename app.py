@@ -49,6 +49,7 @@ class TORIMEI(BaseModel):
         populate_by_name=True
     )
     trd_id: Optional[int] = None
+    dtl_id: Optional[int] = None
     prd_id: int
     prd_code: str
     prd_name: str
