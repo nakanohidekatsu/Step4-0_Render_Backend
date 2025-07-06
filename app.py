@@ -43,13 +43,18 @@ class TORIMEI(BaseModel):
     # TAX_CD: str
     
     trd_id:      int
-    dtl_id:      Optional[int] = None  # 自動採番列は任意
+    dtl_id:      int | None = None
     prd_id:      int
     prd_code:    str
     prd_name:    str
     prd_price:   int
     prd_price_inc_tax: int
     tax_cd:      str
+    
+    model_config = ConfigDict(
+        alias_generator=lambda field: field.upper(),
+        populate_by_name=True
+    )
     
     class Config:
         # JSON 側で大文字キーを使うなら次を有効化

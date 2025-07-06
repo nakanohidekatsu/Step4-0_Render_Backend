@@ -34,6 +34,23 @@ def myinsert_torihiki(mymodel, values):
     session.close()
     return "inserted"
 
+def insert_torimei_and_return(data_model, values):
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    try:
+        # INSERT ... RETURNING で dtl_id も取り回す
+        stmt = (
+            insert(data_model)
+            .values(**values)
+            .returning(data_model.trd_id, data_model.dtl_id)
+        )
+        with session.begin():
+            row = session.execute(stmt).one()
+        # row は sqlalchemy.engine.Row(trd_id=…, dtl_id=…)
+        return row
+    finally:
+        session.close()
+        
 def myinsert_torimei(mymodel, values):
     # session構築
     Session = sessionmaker(bind=engine)
